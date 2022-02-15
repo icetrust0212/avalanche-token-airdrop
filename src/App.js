@@ -1,25 +1,26 @@
 import logo from './logo.svg';
 import './App.css';
+import { useEtherBalance, useEthers } from '@usedapp/core';
+import { formatEther } from 'ethers/lib/utils';
+import {useHolders} from './api/hook';
 
-function App() {
+export default function App() {
+  const { activateBrowserWallet, account } = useEthers()
+  const etherBalance = useEtherBalance(account)
+  const holders = useHolders();
+  const airdrop = () => {
+
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+    <div>
+      <div>
+        <button onClick={() => activateBrowserWallet()}>Connect</button>
+        <button onClick={() => airdrop()}>AirDrop</button>
+      </div>
+      {account && <p>Account: {account}</p>}
+      {etherBalance && <p>Balance: {formatEther(etherBalance)}</p>}
 
-export default App;
+    </div>
+  )
+}
