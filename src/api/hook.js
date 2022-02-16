@@ -26,26 +26,51 @@ function useContract(address, ABI, library, account, withSignerIfPossible = true
   }, [address, ABI, library, withSignerIfPossible, account])
 }
 
-export async function  useHolders() {
-    const {library, account} = useEthers();
+export function  useEvents() {
+    const {library, account, active} = useEthers();
     const tokenContract = useContract(TOKEN_ADDRESS, TOKEN_ABI, library, account);
-
-    console.log('contract:', tokenContract);
 
     const [events, setEvents] = useState([]);
 
     useEffect(async () => {
+
       const getEvents = async () => {
         let eventFilter = tokenContract.filters.Transfer() 
         const txs = await tokenContract.queryFilter(eventFilter, 10841421);
-        console.log('txs: ', txs);
-        setEvents(txs);
+        console.log('txs: ', txs)
+        setEvents(txs || []);
       }
-      if (tokenContract) {
+
+      if (tokenContract && active && account) {
         getEvents();
       }
-    }, [tokenContract])
+    }, [tokenContract, active, account])
 
     return events;
-    
+}
+
+export function useHolders() {
+  const [holders, setHolders] = useState([]);
+  const events = useEvents([]);
+  console.log('events: ', events)
+  useEffect(() => {
+    const getHolders = async () => {
+      let addresses = [];
+      for (let event of events) {
+        const {from} = event.args;
+        const {to} = event.args;
+        if (addresses.indexOf(from) === -1) {
+          addresses.push(from);
+        }
+        if (addresses.indexOf(to) === -1) {
+          addresses.push(to);
+        }
+      }
+      console.log('addresses: ', addresses);
+      setHolders(addresses);
+    }
+
+    getHolders();
+  }, [events]) 
+  return holders;
 }
