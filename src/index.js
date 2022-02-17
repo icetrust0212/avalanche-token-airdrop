@@ -3,12 +3,13 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import {Avalanche, Config, DAppProvider, Mainnet} from '@usedapp/core';
+import {Avalanche, Config, DAppProvider, Mainnet, Ropsten} from '@usedapp/core';
 
 const config = {
   readOnlyChainId: Avalanche.chainId,
   readOnlyUrls: {
-    [Avalanche.chainId]: 'https://api.avax.network/ext/bc/C/rpc',
+    // [Ropsten.chainId]: 'https://nd-612-265-160.p2pify.com/83afdf25f354b80e10aa4a82e8a4b7cb/ext/bc/C/rpc',
+    [Avalanche.chainId]: 'https://nd-612-265-160.p2pify.com/83afdf25f354b80e10aa4a82e8a4b7cb/ext/bc/C/rpc',
   },
 }
 
